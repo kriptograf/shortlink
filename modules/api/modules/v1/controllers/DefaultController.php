@@ -2,8 +2,7 @@
 
 namespace app\modules\api\modules\v1\controllers;
 
-use yii\helpers\Json;
-use yii\web\Controller;
+use yii\rest\Controller;
 
 /**
  * Default controller for the `v1` module
@@ -16,9 +15,9 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return Json::encode([
+        return [
             'success'=>true,
             'message'=>'This default/index'
-        ]);
+        ];
     }
 }
