@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-use yii\base\NotSupportedException;
+
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
@@ -43,10 +43,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
-            'createdAtAttribute' => 'create_time',
-            'updatedAtAttribute' => false,
-            'value' => new Expression('NOW()'),
+            [
+                'class'=>TimestampBehavior::className(),
+                //'createdAtAttribute' => 'created_at',
+                //'updatedAtAttribute' => 'updated_at',
+                //'value' => new Expression('NOW()'),
+            ]
+
         ];
     }
 
@@ -56,19 +59,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\app\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-
-            ['email', 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\app\models\User', 'message' => 'This email address has already been taken.'],
-
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
@@ -203,20 +193,5 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
-    }
-
-    public function signup()
-    {
-        if (!$this->validate()) {
-            return null;
-        }
-
-        $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-
-        return $user->save() ? $user : null;
     }
 }
