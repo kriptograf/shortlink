@@ -1,107 +1,115 @@
 <template>
   <div id="app">
-    <img src="/src/assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
-    <div class="site-index">
+    <div v-if="$auth.ready() && loaded">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <router-link to="/" class="navbar-brand">Navbar</router-link>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <router-link :to="{name: 'default'}" class="nav-link">Home</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{name: 'about'}" class="nav-link">About</router-link>
+            </li>
+            <li class="nav-item" v-show="!$auth.check()">
+              <router-link  :to="{name: 'register'}" class="nav-link">Sign up</router-link>
+            </li>
+            <li class="nav-item" v-show="!$auth.check()">
+              <router-link :to="{name: 'login'}" class="nav-link">Log in</router-link>
+            </li>
+            <li class="nav-item" v-show="$auth.check()">
+              <router-link :to="{name: 'profile'}" class="nav-link">Profile</router-link>
+            </li>
+            <li class="nav-item" v-show="$auth.check()">
+              <a v-on:click="logout()" href="javascript:void(0);" class="nav-link">logout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
 
-      <div class="jumbotron">
-        <h1>Congratulations!</h1>
+      <hr/>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+      <div style="max-width:400px; margin:0 auto 50px auto;">
+        <router-view></router-view>
       </div>
 
-      <div class="body-content">
+      <hr/>
 
-        <div class="row">
-          <div class="col-lg-4">
-            <h2>Heading</h2>
+      <div style="text-align:center; font-size:12px;">
+        Websanova <a href="https://github.com/websanova/laravel-api-demo">demo server</a> available on GitHub
+      </div>
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-              ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-              fugiat nulla pariatur.</p>
+    </div>
 
-            <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-          </div>
-          <div class="col-lg-4">
-            <h2>Heading</h2>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-              ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-              fugiat nulla pariatur.</p>
-
-            <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-          </div>
-          <div class="col-lg-4">
-            <h2>Heading</h2>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-              ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-              fugiat nulla pariatur.</p>
-
-            <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-          </div>
-        </div>
-
+    <div v-if="!$auth.ready() || !loaded">
+      <div style="text-align:center; padding-top:150px;">
+        Loading site...
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
+  export default {
+      name: 'app',
+      data () {
+          return {
+              context: 'app context',
+              loaded: false
+          }
+      },
+      mounted() {
+          var _this = this;
+          // Set up $auth.ready with other arbitrary loaders (ex: language file).
+          setTimeout(function () {
+              console.log('loaded');
+              _this.loaded = true;
+          }, 500);
+      },
+      created() {
+          console.log('created');
+          var _this = this;
+          this.$auth.ready(function () {
+              console.log('ready ' + this.context);
+          });
+          // Vue.http.interceptors.push(function (req, next) {
+          //     next(function (res) {
+          //         if ( ! res.ok) {
+          //             _this.$router.push({name: 'error-502'})
+          //         }
+          //     });
+          // });
+      },
+      methods: {
+          logout() {
+              this.$auth.logout({
+                  makeRequest: true,
+                  success() {
+                      console.log('success ' + this.context);
+                  },
+                  error() {
+                      console.log('error ' + this.context);
+                  }
+              });
+          },
+          unimpersonate() {
+              this.$auth.unimpersonate({
+                  success() {
+                      console.log('success ' + this.context);
+                  },
+                  error() {
+                      console.log('error ' + this.context);
+                  }
+              });
+          }
+      }
   }
-}
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+  @import '../node_modules/bootstrap/scss/bootstrap.scss';
 </style>
