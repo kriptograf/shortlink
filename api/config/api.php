@@ -4,7 +4,7 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'basic',
+    'id' => 'api',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -13,7 +13,10 @@ $config = [
     ],
     'components' => [
         'request' => [
-            'baseUrl' => '',
+            'baseUrl' => '/api',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'W5u9yUHj5JHzm1gj7OgKZNOS91isxfvl',
         ],
@@ -24,9 +27,9 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
-        'errorHandler' => [
+        /*'errorHandler' => [
             'errorAction' => 'site/error',
-        ],
+        ],*/
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set
@@ -48,20 +51,15 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '/'=>'api/v1/default',
-                '/about'=>'api/v1/default/about',
-                //'<controller:\w+>/<id:\d+>' => '<controller>/view',
-                //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                //'<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                //'/'=>'api/v1/default',
+                //'/about'=>'api/v1/default/about',
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 // Here is the mater configuration of URL Management for Modules
-                'api/<module:\w+>/<controller:\w+>/<id:\d+>' => 'api/<module>/<controller>/view',
-                'api/<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => 'api/<module>/<controller>/<action>',
+                //'api/<module:\w+>/<controller:\w+>/<id:\d+>' => 'api/<module>/<controller>/view',
+                //'api/<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => 'api/<module>/<controller>/<action>',
             ],
-        ],
-    ],
-    'modules' => [
-        'api' => [
-            'class' => 'app\modules\api\Module',
         ],
     ],
     'params' => $params,

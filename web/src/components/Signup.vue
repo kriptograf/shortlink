@@ -1,90 +1,56 @@
 <template>
-    <div>
-        <h1>Register</h1>
-
-        <b>NOTE:</b> Please use only dummy data here as it is running off a demo server.
-
-        <hr/>
-
-        <form v-on:submit.prevent="register()">
-            <table><tr>
-                <td>Avatar</td>
-                <td><input v-on:change="setAvatar" type="file" /></td>
-                <tr>
-                    <td>Username:</td>
-                    <td><input v-model="data.body.username" /></td>
-                </tr><tr>
-                    <td>Password:</td>
-                    <td><input v-model="data.body.password" type="password" /></td>
-                </tr><tr>
-                    <td></td>
-                    <td><label><input v-model="data.autoLogin" type="checkbox" /> Auto Login</label></td>
-                </tr><tr>
-                    <td></td>
-                    <td><label><input v-model="data.rememberMe" type="checkbox" /> Remember Me</label></td>
-                </tr><tr>
-                    <td></td>
-                    <td><button type="submit">Register</button></td>
-                </tr></table>
-
-            <hr/>
-
-            <div v-show="error" style="color:red; word-wrap:break-word;">{{ error | json }}</div>
-        </form>
+    <div class="card">
+        <div class="card-header text-white bg-dark">
+            Registration
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger" v-if="error && !success">
+                <p>There was an error, unable to complete registration.</p>
+            </div>
+            <div class="alert alert-success" v-if="success">
+                <p>Registration completed. You can now sign in.</p>
+            </div>
+            <form autocomplete="off" v-on:submit="register" v-if="!success">
+                <div class="form-group" v-bind:class="{ 'has-error': error && response.username }">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" class="form-control" v-model="name" required>
+                    <span class="help-block" v-if="error && response.name">{{ response.name }}</span>
+                </div>
+                <div class="form-group" v-bind:class="{ 'has-error': error && response.email }">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" class="form-control" placeholder="gavin.belson@hooli.com" v-model="email" required>
+                    <span class="help-block" v-if="error && response.email">{{ response.email }}</span>
+                </div>
+                <div class="form-group" v-bind:class="{ 'has-error': error && response.password }">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" v-model="password" required>
+                    <span class="help-block" v-if="error && response.password">{{ response.password }}</span>
+                </div>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+        </div>
     </div>
 </template>
 
 <script>
+    import auth from '../auth.js';
     export default {
         name: "signup",
         data() {
             return {
-                context: 'register context',
-
-                data: {
-                    body: {
-                        username: '',
-                        password: '',
-                        avatar: null
-                    },
-                    autoLogin: false,
-                    rememberMe: false
-                },
-                formData: new FormData(),
-                error: null
+                name: null,
+                email: null,
+                password: null,
+                success: false,
+                error: false,
+                response: null
             };
         },
         methods: {
-            setAvatar(e) {
-                var _this = this,
-                    file = (e.target.files || e.dataTransfer.files)[0],
-                    reader = new FileReader();
-                reader.onload = (e) => {
-                    _this.data.body.avatar = e.target.result;
-                };
-
-                reader.readAsDataURL(file);
-            },
-            register() {
-                var formData = new FormData();
-                if (this.data.body.avatar) {
-                    formData.append('avatar', this.data.body.avatar);
-                }
-                formData.append('username', this.data.body.username);
-                formData.append('password', this.data.body.password);
-                this.$auth.register({
-                    body: formData, // Vue-resoruce
-                    data: formData, // Axios
-                    autoLogin: this.data.autoLogin,
-                    rememberMe: this.data.rememberMe,
-                    success: function () {
-                        console.log('success ' + this.context);
-                    },
-                    error: function (res) {
-                        console.log('error ' + this.context);
-                        this.error = res.data;
-                    }
-                });
+            register(event) {
+                console.log('register method');
+                event.preventDefault()
+                auth.register(this, this.name, this.email, this.password)
             }
         }
     }

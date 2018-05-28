@@ -20,4 +20,12 @@ class DefaultController extends Controller
             'message'=>'This default/index'
         ];
     }
+
+    public function actionAbout()
+    {
+        return [
+            'success'=>true,
+            'message'=>'This default/index'
+        ];
+    }
 }

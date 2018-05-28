@@ -1,6 +1,11 @@
 <template>
-    <div>
-        404
+    <div class="card">
+        <div class="card-title text-white bg-dark">
+            404
+        </div>
+        <div class="card-body">
+            404
+        </div>
     </div>
 </template>
 

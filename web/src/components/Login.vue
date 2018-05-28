@@ -1,59 +1,45 @@
 <template>
-    <div>
-        <form v-on:submit.prevent="login()" class="form-signin">
-            <h2>Login</h2>
-            <label>
-                <input v-model="data.body.username" placeholder="email">
-            </label>
-            <label>
-                <input v-model="data.body.password" placeholder="password" type="password">
-            </label>
-            <label>
-                <input v-model="data.rememberMe" type="checkbox"> Remember Me
-            </label>
-            <br>
-            <button type="submit" class="btn btn-info">Login</button>
-            <div v-show="error" style="color:red; word-wrap:break-word;">{{ error | json }}</div>
-        </form>
+    <div class="card">
+        <div class="card-header text-white bg-dark">
+            Login
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger" v-if="error">
+                <p>There was an error, unable to sign in with those credentials.</p>
+            </div>
+            <form v-on:submit="signin" class="form-signin">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" v-model="username" placeholder="username" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" class="form-control" v-model="password" placeholder="password" type="password">
+                </div>
+
+                <br>
+                <button type="submit" class="btn btn-info">Login</button>
+                <div v-show="error" style="color:red; word-wrap:break-word;">{{ error | json }}</div>
+            </form>
+        </div>
+
     </div>
 </template>
 
 <script>
+    import auth from '../auth.js';
     export default {
-        data () {
+        data() {
             return {
-                context: 'login context',
-                data: {
-                    body: {
-                        username: 'admin',
-                        password: 'secret'
-                    },
-                    rememberMe: false,
-                    fetchUser: true
-                },
-                error: null
+                username: null,
+                password: null,
+                error: false
             }
         },
-        mounted() {
-            console.log(this.$auth.redirect());
-            // Can set query parameter here for auth redirect or just do it silently in login redirect.
-        },
         methods: {
-            login() {
-                var redirect = this.$auth.redirect();
-                this.$auth.login({
-                    body: this.data.body, // Vue-resource
-                    data: this.data.body, // Axios
-                    rememberMe: this.data.rememberMe,
-                    redirect: {name: redirect ? redirect.from.name : 'profile'},
-                    fetchUser: this.data.fetchUser
-                })
-                    .then(() => {
-                        console.log('success ' + this.context);
-                    }, (res) => {
-                        console.log('error ' + this.context);
-                        this.error = res.data;
-                    });
+            signin(event) {
+                event.preventDefault()
+                auth.signin(this, this.username, this.password)
             }
         }
     }
@@ -65,8 +51,5 @@
     }
     .form-signin {
         width: 100%;
-        max-width: 330px;
-        padding: 15px;
-        margin: auto;
     }
 </style>

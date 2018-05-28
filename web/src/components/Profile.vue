@@ -1,7 +1,9 @@
 <template>
-    <div>
-        <h2>Profile</h2>
-        <p>Yay you made it!</p>
+    <div class="card">
+        <div class="card-header text-white bg-dark">Profile</div>
+        <div class="card-body">
+            <p>Yay you made it!</p>
+        </div>
     </div>
 </template>
 
