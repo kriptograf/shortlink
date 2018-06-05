@@ -1,5 +1,9 @@
+/**
+ * @todo переписать всё на axios, вмсесто VueResources
+ */
 import Vue from './main.js';
-import router from './main.js';
+import router from './router';
+console.log('authjs');
 
 export default {
     user: {
@@ -35,7 +39,6 @@ export default {
         })
     },
     signin(context, username, password) {
-        let self = this;
         Vue.http.post(
             'api/user/login',
             {
@@ -50,8 +53,8 @@ export default {
             this.user.authenticated = true
             this.user.profile = response.data.data
 
-            console.log(router);
-                //history.pushState('/profile');
+            router.push('/profile');
+
         }, response => {
             context.error = true
         })
@@ -61,7 +64,6 @@ export default {
         this.user.authenticated = false
         this.user.profile = null
 
-        console.log(router);
-        //router('/');
+        router.push('/');
     }
 }

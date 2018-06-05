@@ -1,35 +1,31 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+//import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 
+//импортируем компоненты
 import App from './App.vue';
-import Home from './components/Home.vue';
-import About from './components/About.vue';
-import Login from './components/Login.vue';
-import Signup from './components/Signup.vue';
-import Profile from './components/Profile.vue';
 
-Vue.use(VueRouter);
+//импортируем компонент авторизации
+import auth from './auth.js';
+//импортируем роутер
+import router from './router';
+
+//говорим вью, что нужно использовать ресурсы
 Vue.use(VueResource);
 
+//Экспортировать Vue иначе в других компонентах не получить к нему доступ
 export default Vue;
 
+//Устанавливаем заголовок авторизации
 Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
 Vue.http.options.root = 'http://shortlink.loc/';
 
-const router = new VueRouter({
-    mode: 'history',
-    routes: [
-        {path: '/', component: Home},
-        {path: '/about', component: About},
-        {path: '/login', component: Login},
-        {path: '/signup', component: Signup},
-        {path: '/profile', component: Profile}
-    ]
-});
-
+//создаем экземрляр Vue
 new Vue({
     el: '#app',
     router,
+    mounted: function () {
+        auth
+    },
     render: h => h(App),
 });

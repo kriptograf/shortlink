@@ -47,7 +47,7 @@
     <div class="container">
       <p class="pull-left">&copy; My Company 2018</p>
 
-      <p class="pull-right">Powered Vue + Yii2</p>
+      <p class="pull-right">Powered Vue2 + Yii2</p>
     </div>
   </footer>
 </template>
@@ -58,6 +58,7 @@
       //name: 'app',
       data () {
           return {
+              pageTitle: 'Home',
               auth: auth
           }
       },
@@ -67,11 +68,7 @@
           }
       },
       mounted: function() {
-          //var router = this.$router;
           auth.check();
-      },
-      ready() {
-          auth.check()
       }
   }
 </script>
