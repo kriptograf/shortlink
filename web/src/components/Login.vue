@@ -33,7 +33,8 @@
             return {
                 username: null,
                 password: null,
-                error: false
+                error: false,
+                title: 'Login'
             }
         },
         methods: {
@@ -41,6 +42,18 @@
                 event.preventDefault()
                 auth.signin(this, this.username, this.password)
             }
+        },
+        // Usage with context the component
+        head: {
+            // To use "this" in the component, it is necessary to return the object through a function
+            title: function () {
+                return {
+                    inner: this.title
+                }
+            },
+            meta: [
+                { name: 'description', content: 'Login description', id: 'desc' }
+            ]
         }
     }
 </script>

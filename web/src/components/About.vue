@@ -21,7 +21,24 @@
 <script>
     export default {
         name: "about",
-        code: "Lorem ipsum dolor"
+        code: "Lorem ipsum dolor",
+        data(){
+            return {
+                title: 'About',
+            }
+        },
+        // Usage with context the component
+        head: {
+            // To use "this" in the component, it is necessary to return the object through a function
+            title: function () {
+                return {
+                    inner: this.title
+                }
+            },
+            meta: [
+                { name: 'description', content: 'About description', id: 'desc' }
+            ]
+        }
     }
 </script>
 

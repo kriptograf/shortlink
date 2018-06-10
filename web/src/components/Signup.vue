@@ -43,7 +43,8 @@
                 password: null,
                 success: false,
                 error: false,
-                response: null
+                response: null,
+                title: 'Signup'
             };
         },
         methods: {
@@ -52,6 +53,18 @@
                 event.preventDefault()
                 auth.register(this, this.name, this.email, this.password)
             }
+        },
+        // Usage with context the component
+        head: {
+            // To use "this" in the component, it is necessary to return the object through a function
+            title: function () {
+                return {
+                    inner: this.title
+                }
+            },
+            meta: [
+                { name: 'description', content: 'Signup description', id: 'desc' }
+            ]
         }
     }
 </script>

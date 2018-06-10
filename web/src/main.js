@@ -2,6 +2,8 @@ import Vue from 'vue';
 //import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 
+import VueHead from 'vue-head';
+
 //импортируем компоненты
 import App from './App.vue';
 
@@ -10,6 +12,7 @@ import auth from './auth.js';
 //импортируем роутер
 import router from './router';
 
+Vue.use(VueHead);
 //говорим вью, что нужно использовать ресурсы
 Vue.use(VueResource);
 

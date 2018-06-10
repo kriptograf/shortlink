@@ -1,6 +1,6 @@
 <template>
-    <div class="site-index">
 
+    <div class="site-index">
         <div class="jumbotron">
             <h1>Congratulations!</h1>
 
@@ -53,8 +53,20 @@
         name: "home",
         data(){
             return {
-                welcome: "Hi, guy! This is yii2 and vue!"
+                title: 'Home',
             }
+        },
+        // Usage with context the component
+        head: {
+            // To use "this" in the component, it is necessary to return the object through a function
+            title: function () {
+                return {
+                    inner: this.title
+                }
+            },
+            meta: [
+                { name: 'description', content: 'My description', id: 'desc' }
+            ]
         }
     }
 </script>
