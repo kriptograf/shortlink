@@ -8,6 +8,7 @@
 
 namespace app\controllers;
 
+use app\models\Link;
 use Yii;
 
 use yii\rest\Controller;
@@ -30,12 +31,19 @@ class UserController extends Controller
         return $behaviors;
     }
 
+    /**
+     * @todo ограничить вывод иныормации о пользователе
+     * @todo добавить ссылки пользователя, сформировать ответ
+     * @todo сделать вывод на фронтенде
+     * @return array
+     */
     public function actionIndex()
     {
 
         /*$data = [];
         $data['name'] = $user->username;
         $data['email'] = $user->email;*/
+
         return [
             'data' => Yii::$app->user->identity,
         ];

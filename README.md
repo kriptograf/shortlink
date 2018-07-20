@@ -231,3 +231,10 @@ vendor/bin/codecept run functional,unit -- --coverage-html --coverage-xml
 ```
 
 You can see code coverage output under the `tests/_output` directory.
+
+### Use Resources
+
+1. bootstrap-vue
+2. vue-head
+3. vue-router
+4. vue-resource

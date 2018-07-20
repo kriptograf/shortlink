@@ -16,8 +16,9 @@ export default {
             Vue.http.get(
                 'api/user',
             ).then(response => {
-                this.user.authenticated = true
-                this.user.profile = response.data.data
+                this.user.authenticated = true;
+                this.user.profile = response.data.data;
+                this.extLinks = response.data.links;
             })
         }else {
             console.log('not auth');

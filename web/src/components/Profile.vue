@@ -11,6 +11,13 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+
+            <b-table striped hover :items="links">
+                <template slot="actions" slot-scope="cell">
+                    <!-- We use click.stop here to prevent a 'row-clicked' event from also happening -->
+                    <b-btn size="sm" @click.stop="removeUrl(cell.item, cell, $event.target)">Details</b-btn>
+                </template>
+            </b-table>
         </div>
     </div>
 </template>
@@ -18,12 +25,19 @@
 <script>
     import Vue from '../main.js';
     import router from '../router';
+
+    /**
+     *
+     * @todo Донастроить таблицу - ширина и прочее
+     * @todo Доделать удаление ссылки
+     */
     export default {
         name: "profile",
         data(){
             return {
                 title: 'Profile',
-                url: ''
+                url: '',
+                links: []
             }
         },
         // Usage with context the component
@@ -38,6 +52,21 @@
                 { name: 'description', content: 'Profile description', id: 'desc' }
             ]
         },
+        created: function(){
+            console.log('in profile');
+            Vue.http.get(
+                'api/link',
+            ).then(response => {
+                /**
+                 * Заполняем таблицу ссылками при иницализации компонента
+                 */
+                var self = this;
+                var arr = response.data.links;
+                arr.forEach(function (item) {
+                    self.links.push(item);
+                });
+            });
+        },
         // computed property for form validation state
         computed: {
             validation: function () {
@@ -48,31 +77,39 @@
             isValid: function () {
                 var validation = this.validation
                 return Object.keys(validation).every(function (key) {
+                    console.log(validation[key]);
                     return validation[key]
                 })
             }
         },
         // methods
         methods: {
-            addUrl: function (url) {
+            addUrl: function () {
                 if (this.isValid) {
                     Vue.http.post(
                         'api/link/create',
                         {
-                            url: url
+                            url: this.url
                         }
                     ).then(response => {
-                        context.success = true
+                        this.success = true;
+                        if(response.data.data.link != null){
+                            this.links.push({OriginalUrl:response.data.data.orig, ShortUrl:response.data.data.link, actions:'<a href="#">Delete</a>'});
+                        }
+                        console.log(this.links);
                     }, response => {
-                        context.response = response.data
-                        context.error = true
+                        this.response = response.data
+                        this.error = true
                     });
 
                     this.url = ''
                 }
             },
-            removeUrl: function (user) {
+            removeUrl: function (user, index, ev) {
                 //usersRef.child(user['.key']).remove()
+                console.log(user);
+                console.log(index);
+                console.log(ev);
             }
         }
     }
