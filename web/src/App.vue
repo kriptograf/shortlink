@@ -39,17 +39,14 @@
         </div>
       </main>
 
-
-
-
+    <footer class="footer">
+      <div class="container">
+        <p class="float-left">&copy; My Company 2018</p>
+        <p class="float-right">Powered Vue2 + Yii2</p>
+      </div>
+    </footer>
   </div>
-  <footer class="footer">
-    <div class="container">
-      <p class="pull-left">&copy; My Company 2018</p>
 
-      <p class="pull-right">Powered Vue2 + Yii2</p>
-    </div>
-  </footer>
 </template>
 
 <script>
